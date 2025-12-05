@@ -164,7 +164,7 @@
                 var encodedData = encodeURIComponent(jsonStr);
                 
                 // 假设路径为 /pages/aliCaptchaVerify/captchaResult
-                wx.miniProgram.redirectTo({
+                wx.miniProgram.navigateTo({
                     url: '/pages/aliCaptchaVerify/captchaResult?data=' + encodedData
                 });
 
