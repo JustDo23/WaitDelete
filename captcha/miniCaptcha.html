@@ -164,14 +164,14 @@
                 var encodedData = encodeURIComponent(jsonStr);
                 
                 // 假设路径为 /pages/aliCaptchaVerify/captchaResult
-                wx.miniProgram.navigateTo({
+                wx.miniProgram.redirectTo({
                     url: '/pages/aliCaptchaVerify/captchaResult?data=' + encodedData
                 });
 
     // 3. 暂时不要 navigateBack
-                setTimeout(() => {
-                    wx.miniProgram.navigateBack();
-                }, 100);
+                // setTimeout(() => {
+                //     wx.miniProgram.navigateBack();
+                // }, 100);
             }
 
             function fail(err) {
