@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="data-spm" content="5176"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+        <script type="text/javascript" src="https://o.alicdn.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha.js"></script>
+        <script src="https://res.wx.qq.com/open/js/jweixin-1.6.2.js"></script>
+
+    </head>
+    <style type="text/css">
+		body {
+			background: transparent;
+		}
+
+		.bigBox {
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#captcha-button {
+			background: white;
+		}
+
+		#loadingBox {
+			position: fixed;
+			z-index: 9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			background: white;
+			border-radius: 12px;
+			padding: 8px 16px;
+		}
+
+		.loadingText {
+			font-size: 16px;
+			margin-top: 6px;
+			color: #333;
+		}
+
+		.simpleLoading {
+			width: 22px;
+			height: 22px;
+			border: 2px solid #333;
+			border-top-color: transparent;
+			border-radius: 100%;
+			animation: circle infinite 0.75s linear;
+		}
+
+		@keyframes circle {
+			0% {
+				transform: rotate(0);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+
+    <body>
+        <div class="bigBox">
+            <div id="captcha-button"></div>
+            <div id="captcha-element"></div>
+            <div id="loadingBox">
+                <div class="simpleLoading"></div>
+                <div class="loadingText">正在校验中</div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            // 小程序接入阿里验证V3
+            var captcha;
+
+            function initCaptcha() {
+                window.initAliyunCaptcha({
+                    SceneId: '1q4nsima', // 场景ID。根据步骤二新建验证场景后，您可以在验证码场景列表，获取该场景的场景ID
+                    prefix: '1fkkrx', // 身份标。开通阿里云验证码2.0后，您可以在控制台概览页面的实例基本信息卡片区域，获取身份标
+                    mode: 'popup', // 验证码模式。popup表示要集成的验证码模式为弹出式。无需修改
+                    element: '#captcha-element', // 页面上预留的渲染验证码的元素，与原代码中预留的页面元素保持一致。
+                    button: '#captcha-button', // 触发验证码弹窗的元素。
+                    success: success,
+                    fail: fail,
+                    onClose: onClose,
+                    getInstance: getInstance, // 绑定验证码实例函数，无需修改
+                    slideStyle: {
+                        width: 360,
+                        height: 50,
+                    }, // 滑块验证码样式，支持自定义宽度和高度，单位为px。其中，width最小值为320 px
+                    language: 'cn', // 验证码语言类型，支持简体中文（cn）、繁体中文（tw）、英文（en）
+                });
+            }
+
+            initCaptcha();
+
+            function getInstance(instance) {
+                console.log(instance)
+                captcha = instance;
+            }
+
+            function success(captchaVerifyParam) {
+                console.log(captchaVerifyParam, 'captchaVerifyParam');
+                // 通知小程序二次校验参数captchaVerifyParam
+                wx.miniProgram.postMessage({
+                  data: captchaVerifyParam,
+                });
+                console.log('GuiXue','验证成功');
+                // setTimeout(() => {
+                //     wx.miniProgram.navigateBack();
+                // }, 300);
+            }
+
+            function fail(err) {
+                console.error(err, 'err');
+            }
+
+            // 验证码弹窗关闭时触发的回调函数
+            function onClose() {
+                onsole.log('GuiXue','弹窗关闭');
+                // wx.miniProgram.navigateBack();
+            }
+
+            // 监听界面完全加载完毕
+            window.onload = function () {
+                setTimeout(function () {
+                    judgeMode();
+                }, 256);
+            };
+
+            function judgeMode() {
+                var captchaElement = document.getElementById('captcha-element');
+                var width = captchaElement.offsetWidth;
+                var height = captchaElement.offsetHeight;
+                if (width > 0 && height > 0) { // 滑动模式
+                    changeLoadingStatus(false); // 隐藏等待
+                } else { // 无痕模式
+                    performClick();
+                }
+            }
+
+            function performClick() {
+                var captchaButton = document.getElementById('captcha-button')
+                var watchClick = setInterval(function () {
+                    let clickHandler = captchaButton.onclick;
+                    if (typeof clickHandler === 'function') {
+                        clearInterval(watchClick)
+                        captchaButton.click();
+                    }
+                }, 256)
+            }
+
+            function changeLoadingStatus(isShow) {
+                document.getElementById('loadingBox').style.display = isShow ? 'flex' : 'none';
+            }
+
+            function watch(elementID) {
+                var targetElement = document.getElementById(elementID);
+                if (targetElement) {
+                    var width = targetElement.offsetWidth;
+                    var height = targetElement.offsetHeight;
+                    console.log(elementID + ' 尺寸：宽度 = ' + width + 'px, 高度 = ' + height + 'px');
+                } else {
+                    console.log(elementID + " 为空");
+                }
+            }
+
+            // 添加错误捕获
+            window.onerror = function (msg, url, line, col, error) {
+                console.error("JavaScript Error:", msg, "at", url, ":", line);
+                return false;
+            };
+        </script>
+    </body>
+</html>
