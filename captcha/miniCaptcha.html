@@ -159,9 +159,9 @@
                 console.log('GuiXue','验证成功');
                 showToast('验证成功');
                 
-                // setTimeout(() => {
-                //     wx.miniProgram.navigateBack();
-                // }, 300);
+                setTimeout(() => {
+                    wx.miniProgram.navigateBack();
+                }, 1200);
             }
 
             function fail(err) {
@@ -171,7 +171,9 @@
             // 验证码弹窗关闭时触发的回调函数
             function onClose() {
                 onsole.log('GuiXue','弹窗关闭');
-                // wx.miniProgram.navigateBack();
+                setTimeout(() => {
+                    wx.miniProgram.navigateBack();
+                }, 1200);
             }
 
             // 监听界面完全加载完毕
