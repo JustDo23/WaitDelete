@@ -62,6 +62,49 @@
 				transform: rotate(360deg);
 			}
 		}
+
+        /* Toast CSS */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 12px; /* Rounded corners */
+            padding: 16px;
+            position: fixed;
+            z-index: 999; /* High z-index */
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
 	</style>
 
     <body>
@@ -73,6 +116,9 @@
                 <div class="loadingText">正在校验中</div>
             </div>
         </div>
+        
+        <!-- Toast Element -->
+        <div id="toast">验证成功</div>
 
         <script type="text/javascript">
             // 小程序接入阿里验证V3
@@ -111,6 +157,8 @@
                   data: captchaVerifyParam,
                 });
                 console.log('GuiXue','验证成功');
+                showToast('验证成功');
+                
                 // setTimeout(() => {
                 //     wx.miniProgram.navigateBack();
                 // }, 300);
@@ -175,6 +223,15 @@
                 console.error("JavaScript Error:", msg, "at", url, ":", line);
                 return false;
             };
+
+            function showToast(message) {
+                var x = document.getElementById("toast");
+                if (x) {
+                    x.innerText = message;
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                }
+            }
         </script>
     </body>
 </html>
