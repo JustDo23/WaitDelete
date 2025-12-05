@@ -159,9 +159,17 @@
                 console.log('GuiXue','验证成功');
                 showToast('验证成功');
                 
-                setTimeout(() => {
-                    wx.miniProgram.navigateBack();
-                }, 1200);
+// 2. 界面提示用户去操作
+    // 动态创建一个遮罩层或弹窗，告诉测试者去做什么
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;';
+    div.innerHTML = '<p style="font-size:20px;">验证成功！</p><p>请点击小程序右上角“...”</p><p>选择“转发”或“复制链接”</p><p>看日志是否触发 onMessage</p>';
+    document.body.appendChild(div);
+
+    // 3. 暂时不要 navigateBack
+                // setTimeout(() => {
+                //     wx.miniProgram.navigateBack();
+                // }, 1200);
             }
 
             function fail(err) {
